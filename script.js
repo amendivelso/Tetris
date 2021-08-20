@@ -1,7 +1,7 @@
-const canvas = document.getElementById('tetris');// accedemos al lienzo canvas
-const context =canvas.getContext('2d'); //se genera contexto para trabajar sobre el DOM con dos dimensiones
+const canvas = document.getElementById('tetris');// accedemos al lienzo canvas ----call canvas
+const context =canvas.getContext('2d'); //se genera contexto para trabajar sobre el DOM con dos dimensiones ---context 2d
 
-context.scale(20, 20); //genera la escala de las fichas
+context.scale(20, 20); //genera la escala de las tetrominos---make game tetrominos scale
 
 function arenaSweep() {
     let rowCount = 1;
@@ -44,45 +44,45 @@ function createMatrix(w, h) {
     return matrix;
 }
 
-function createPiece(type) // crea la ficha en forma de i
+function createPiece(type) // crea la funcion que creara las fichas
 {
-    if (type === 'I') {
+    if (type === 'I') { // if que crea la figura en forma de i--- create game "tetrominos" like I
         return [
             [0, 1, 0, 0],
             [0, 1, 0, 0],
             [0, 1, 0, 0],
             [0, 1, 0, 0],
         ];
-    } else if (type === 'L') {
+    } else if (type === 'L') { // else if que genera la ficha en  forma de L-- create game tokens like L
         return [
             [0, 2, 0],
             [0, 2, 0],
             [0, 2, 2],
         ];
-    } else if (type === 'J') {
+    } else if (type === 'J') { // else if que genera la ficha en  forma de J------ create game "tetrominos"  like J
         return [
             [0, 3, 0],
             [0, 3, 0],
             [3, 3, 0],
         ];
-    } else if (type === 'O') {
-        return [
+    } else if (type === 'O') { // else if que genera la ficha en  forma de cuadrado, se identifica con la o para darle una identidad
+        return [ //-- create game "tetrominos"  like square
             [4, 4],
             [4, 4],
         ];
-    } else if (type === 'Z') {
+    } else if (type === 'Z') {// else if que genera la ficha en  forma de Z----- create game "tetrominos" like Z
         return [
             [5, 5, 0],
             [0, 5, 5],
             [0, 0, 0],
         ];
-    } else if (type === 'S') {
+    } else if (type === 'S') { // else if que genera la ficha en  forma de S ----- create game "tetrominos"  like S
         return [
             [0, 6, 6],
             [6, 6, 0],
             [0, 0, 0],
         ];
-    } else if (type === 'T') {
+    } else if (type === 'T') { // else if que genera la ficha en  forma de T ----- create game "tetrominos"  like T
         return [
             [0, 7, 0],
             [7, 7, 7],
@@ -91,13 +91,13 @@ function createPiece(type) // crea la ficha en forma de i
     }
 }
 
-function drawMatrix(matrix, offset) {
-    matrix.forEach((row, y) => {
+function drawMatrix(matrix, offset) { // funcion que recorre la matriz de a ficha y pone y rellena con el color 
+    matrix.forEach((row, y) => {      // funcion that iterative in the tetrominos'matrix and put color
         row.forEach((value, x) => {
             if (value !== 0) {
-                context.fillStyle = colors[value];
-                context.fillRect(x + offset.x,
-                                 y + offset.y,
+                context.fillStyle = colors[value]; // omite el cero, pero si esta ocupado pone el color
+                context.fillRect(x + offset.x,  // compensa las coordenadas para que ciga en el centro
+                                 y + offset.y,  // put center to display to tetrominos
                                  1, 1);
             }
         });
@@ -105,7 +105,7 @@ function drawMatrix(matrix, offset) {
 }
 
 function draw() {
-    context.fillStyle = '#000';
+    context.fillStyle = '#000'; // creacion del contexto y asignacion del estilo --- creation of context-background black 
     context.fillRect(0, 0, canvas.width, canvas.height);
 
     drawMatrix(arena, {x: 0, y: 0});
@@ -122,9 +122,9 @@ function merge(arena, player) {
     });
 }
 
-function rotate(matrix, dir) {
+function rotate(matrix, dir) { // funcion que le permite al jugador cambiar la posicion de la ficha-- chance direction of "tetrominos" 
     for (let y = 0; y < matrix.length; ++y) {
-        for (let x = 0; x < y; ++x) {
+        for (let x = 0; x < y; ++x) { // lo que hace es pasar la columna a fila, y la fila a columna-- chanche columns and rows
             [
                 matrix[x][y],
                 matrix[y][x],
@@ -189,14 +189,14 @@ function playerRotate(dir) {
     }
 }
 
-let dropCounter = 0;
-let dropInterval = 1000;
+let dropCounter = 0; //dibuja contador de tiempo, como gotas cayendo----draw count
+let dropInterval = 1000; // pone intervalo de 1000(milisegundos) para cada vez que cae un agota---interval 1 second
 
 let lastTime = 0;
 function update(time = 0) {
     const deltaTime = time - lastTime;
 
-    dropCounter += deltaTime;
+    dropCounter += deltaTime; 
     if (dropCounter > dropInterval) {
         playerDrop();
     }
@@ -225,7 +225,7 @@ document.addEventListener('keydown', event => {
     }
 });
 
-const colors = [
+const colors = [ // listado de colores para asignar a las "tetrominos" --- list of colors
     null,
     '#FF0D72',
     '#0DC2FF',
