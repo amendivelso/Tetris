@@ -5,15 +5,15 @@ context.scale(20, 20); //genera la escala de las tetrominos---make game tetromin
 
 function arenaSweep() { //Nos permite  eliminar una linea horizontal bien hecha que va dejando limpia la region por donde ya paso
     let rowCount = 1;
-    outer: for (let y = arena.length -1; y > 0; --y) {
+    outer: for (let y = arena.length -1; y > 0; --y) { // si la line se llen, sin dejar un solo espacio esta se suprime toda
         for (let x = 0; x < arena[y].length; ++x) {
             if (arena[y][x] === 0) {
-                continue outer;
+                continue outer;// si no, debe contuniar el llenado
             }
         }
 
-        const row = arena.splice(y, 1)[0].fill(0);
-        arena.unshift(row);
+        const row = arena.splice(y, 1)[0].fill(0); //se realiza el empalme de las fichas consecutivas horizontales y las suprime
+        arena.unshift(row); // la fila queda vacia, y se llena dejando desplazar la fila que esta encima
         ++y;
 
         player.score += rowCount * 10;
@@ -33,7 +33,7 @@ function collide(arena, player) {//Detecta una colicion entre una figura y otra
             }
         }
     }
-    return false;
+    return false; // si no detecta colicion segura desdenciendo hasta que encuentre donde colisionar
 }
 
 function createMatrix(w, h) { // se crean dos matrices vacias por donde va a desplazarse hacia abajo creando otra matriz que la empuja
@@ -108,9 +108,9 @@ function draw() {
     context.fillStyle = '#000'; // creacion del contexto y asignacion del estilo --- creation of context-background black 
     context.fillRect(0, 0, canvas.width, canvas.height);
 
-    drawMatrix(arena, {x: 0, y: 0});
-    drawMatrix(player.matrix, player.pos);
-}
+    drawMatrix(arena, {x: 0, y: 0}); // se esatblece la matriz de arena para diferenciarla del usuario
+    drawMatrix(player.matrix, player.pos);//se establece la matriz de la posicion del usuario
+}                              // en este punto se logra que las fichas se apilen
 
 function merge(arena, player) { //funcion que busca fundir las piezas para que se unan sin sobrepasarse ni ponerse una sobre la otra
     player.matrix.forEach((row, y) => {
@@ -135,39 +135,39 @@ function rotate(matrix, dir) { // funcion que le permite al jugador cambiar la p
         }
     }
 
-    if (dir > 0) {
+    if (dir > 0) { // si la direccion es mayor a cero, es decir ira en sentido de las manecillas del reloj con el codigo de la letra W
         matrix.forEach(row => row.reverse());
     } else {
-        matrix.reverse();
+        matrix.reverse(); // si no ira en contra de las manecillas del reloj, es decir la letra Q
     }
 }
 
 function playerDrop() { // funcion que permite al usuario cambiar de direccion de la ficha, sin que siga mas de una orden a la vez
     player.pos.y++;
-    if (collide(arena, player)) {
+    if (collide(arena, player)) { // si la ficha colisiona o llega a la arena esta se fusionara con la arena, y la zona de juego se vera disminuida
         player.pos.y--;
         merge(arena, player);
-        playerReset();
+        playerReset(); // reinicia la creacion de la nueva ficha y posicion de inicio
         arenaSweep();
         updateScore();
     }
     dropCounter = 0;
 }
 
-function playerMove(offset) {
+function playerMove(offset) { //permite que el usuario desplace la ficha sin salirse de la arena
     player.pos.x += offset;
     if (collide(arena, player)) {
-        player.pos.x -= offset;
+        player.pos.x -= offset; // el movimiento solo es en el eje X es decir horizontal
     }
 }
 
 function playerReset() {
     const pieces = 'TJLOSZI';
-    player.matrix = createPiece(pieces[pieces.length * Math.random() | 0]);
-    player.pos.y = 0;
+    player.matrix = createPiece(pieces[pieces.length * Math.random() | 0]); // se crea random para poner aleatoria la creacion de las fichas
+    player.pos.y = 0; // ppone la ficha en el centro y arriba de la arena
     player.pos.x = (arena[0].length / 2 | 0) -
                    (player.matrix[0].length / 2 | 0);
-    if (collide(arena, player)) {
+    if (collide(arena, player)) { // si las fichas llenan el espacio vertical hasta llegar al limite superior, se reiniciara, poniendo todo en ceros
         arena.forEach(row => row.fill(0));
         player.score = 0;
         updateScore();
@@ -178,10 +178,11 @@ function playerRotate(dir) {
     const pos = player.pos.x;
     let offset = 1;
     rotate(player.matrix, dir);
-    while (collide(arena, player)) {
+    while (collide(arena, player)) { // si la ficgha al rotar se encuentra con el limite de la arena no se puede salir, debe generar colision...
+
         player.pos.x += offset;
-        offset = -(offset + (offset > 0 ? 1 : -1));
-        if (offset > player.matrix[0].length) {
+        offset = -(offset + (offset > 0 ? 1 : -1)); //si gira cerca de los limites lo hara rebotar al lado contrario
+        if (offset > player.matrix[0].length) { // si hay una colicion, se iniciara la posicion de donde empieza a bajar la ficha
             rotate(player.matrix, -dir);
             player.pos.x = pos;
             return;
@@ -208,20 +209,20 @@ function update(time = 0) { // se inicia el tiempo en ceros
 }
 
 function updateScore() {
-    document.getElementById('score').innerText = player.score;
+    document.getElementById('score').innerText = player.score; //genera el conteo del jugador
 }
 
 document.addEventListener('keydown', event => { //guarda un evento click de teclado
-    if (event.keyCode === 37) { // es el codigo de la tecla 
+    if (event.keyCode === 37) { // es el codigo de la tecla izquierda
         playerMove(-1);
     } else if (event.keyCode === 39) { // es el codigo de la tecla de flecha derecha
         playerMove(1);
     } else if (event.keyCode === 40) {// es el codigo de la tecla de flecha abajo
         playerDrop(); //-------------------restablece el flujo y velocidad normal de la ficha
-    } else if (event.keyCode === 81) {
-        playerRotate(-1);
-    } else if (event.keyCode === 87) {
-        playerRotate(1);
+    } else if (event.keyCode === 81) { // es el codigo de la tecla de flecha abajo Q  contrario a las manecillas del reloj
+        playerRotate(-1); //gira en contra de las manecillas del reloj
+    } else if (event.keyCode === 87) {// es el codigo de la tecla de flecha abajo W gira en el sentido de las manecillas del reloj
+        playerRotate(1); // gira con las manecillas del reloj 
     }
 });
 
@@ -241,7 +242,7 @@ const arena = createMatrix(12, 20);  // es por donde se desplazan las fihas, y q
 const player = { 
     pos: {x: 0, y: 0},
     matrix: null,
-    score: 0,
+    score: 0, //puntuacion de jugador inicia en cero
 };
 
 playerReset();
