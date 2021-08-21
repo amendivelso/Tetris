@@ -3,7 +3,7 @@ const context =canvas.getContext('2d'); //se genera contexto para trabajar sobre
 
 context.scale(20, 20); //genera la escala de las tetrominos---make game tetrominos scale
 
-function arenaSweep() { //Nos permite  eliminar una linea horizontal bien hecha 
+function arenaSweep() { //Nos permite  eliminar una linea horizontal bien hecha que va dejando limpia la region por donde ya paso
     let rowCount = 1;
     outer: for (let y = arena.length -1; y > 0; --y) {
         for (let x = 0; x < arena[y].length; ++x) {
