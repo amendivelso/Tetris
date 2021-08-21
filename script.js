@@ -36,10 +36,10 @@ function collide(arena, player) {//Detecta una colicion entre una figura y otra
     return false;
 }
 
-function createMatrix(w, h) {
+function createMatrix(w, h) { // se crean dos matrices vacias por donde va a desplazarse hacia abajo creando otra matriz que la empuja
     const matrix = [];
-    while (h--) {
-        matrix.push(new Array(w).fill(0));
+    while (h--) { // se recorrera con un while para establecer los puntos que estan ocupados
+        matrix.push(new Array(w).fill(0)); // empujara una nueva matriz desplazando a la que viene ocupada
     }
     return matrix;
 }
@@ -112,7 +112,7 @@ function draw() {
     drawMatrix(player.matrix, player.pos);
 }
 
-function merge(arena, player) {
+function merge(arena, player) { //funcion que busca fundir las piezas para que se unan sin sobrepasarse ni ponerse una sobre la otra
     player.matrix.forEach((row, y) => {
         row.forEach((value, x) => {
             if (value !== 0) {
@@ -142,7 +142,7 @@ function rotate(matrix, dir) { // funcion que le permite al jugador cambiar la p
     }
 }
 
-function playerDrop() {
+function playerDrop() { // funcion que permite al usuario cambiar de direccion de la ficha, sin que siga mas de una orden a la vez
     player.pos.y++;
     if (collide(arena, player)) {
         player.pos.y--;
@@ -197,8 +197,8 @@ function update(time = 0) { // se inicia el tiempo en ceros
     const deltaTime = time - lastTime;//se hace una constante del tiempo que se va a aumentar en el contador
 
     dropCounter += deltaTime; //dorp counter es como el goteo de las piezas, con que velocidad va a caer, la relacion con el tiempo es para que se vaya aumentando la velocidad a medida que el usuario avanza en el juego
-    if (dropCounter > dropInterval) {
-        playerDrop();
+    if (dropCounter > dropInterval) { //cuando deje de caer la ficha, se iniciara nuevamente la ciada de otra
+        playerDrop(); // restablece flujo normal de la ficha
     }
 
     lastTime = time;
@@ -211,13 +211,13 @@ function updateScore() {
     document.getElementById('score').innerText = player.score;
 }
 
-document.addEventListener('keydown', event => {
-    if (event.keyCode === 37) {
+document.addEventListener('keydown', event => { //guarda un evento click de teclado
+    if (event.keyCode === 37) { // es el codigo de la tecla 
         playerMove(-1);
-    } else if (event.keyCode === 39) {
+    } else if (event.keyCode === 39) { // es el codigo de la tecla de flecha derecha
         playerMove(1);
-    } else if (event.keyCode === 40) {
-        playerDrop();
+    } else if (event.keyCode === 40) {// es el codigo de la tecla de flecha abajo
+        playerDrop(); //-------------------restablece el flujo y velocidad normal de la ficha
     } else if (event.keyCode === 81) {
         playerRotate(-1);
     } else if (event.keyCode === 87) {
@@ -236,7 +236,7 @@ const colors = [ // listado de colores para asignar a las "tetrominos" --- list 
     '#3877FF',
 ];
 
-const arena = createMatrix(12, 20);
+const arena = createMatrix(12, 20);  // es por donde se desplazan las fihas, y quedan atascadas, cuando no llenan una fila
 
 const player = { 
     pos: {x: 0, y: 0},
