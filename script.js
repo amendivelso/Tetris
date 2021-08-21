@@ -21,7 +21,7 @@ function arenaSweep() { //Nos permite  eliminar una linea horizontal bien hecha 
     }
 }
 
-function collide(arena, player) {
+function collide(arena, player) {//Detecta una colicion entre una figura y otra 
     const m = player.matrix;
     const o = player.pos;
     for (let y = 0; y < m.length; ++y) {
