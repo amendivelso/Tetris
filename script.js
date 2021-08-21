@@ -97,7 +97,7 @@ function drawMatrix(matrix, offset) { // funcion que recorre la matriz de a fich
             if (value !== 0) {
                 context.fillStyle = colors[value]; // omite el cero, pero si esta ocupado pone el color
                 context.fillRect(x + offset.x,  // compensa las coordenadas para que ciga en el centro
-                                 y + offset.y,  // put center to display to tetrominos
+                                 y + offset.y,  // compensa las coordenadas por donde pasa para que no se alargue el tetrominos, sino que se vaya borrando por donde pasa
                                  1, 1);
             }
         });
@@ -192,11 +192,11 @@ function playerRotate(dir) {
 let dropCounter = 0; //dibuja contador de tiempo, como gotas cayendo----draw count
 let dropInterval = 1000; // pone intervalo de 1000(milisegundos) para cada vez que cae un agota---interval 1 second
 
-let lastTime = 0;
-function update(time = 0) {
-    const deltaTime = time - lastTime;
+let lastTime = 0; // se crea variable para que se guarde el tiempo, con esto se puede ir aumentando la velocidad del juego
+function update(time = 0) { // se inicia el tiempo en ceros
+    const deltaTime = time - lastTime;//se hace una constante del tiempo que se va a aumentar en el contador
 
-    dropCounter += deltaTime; 
+    dropCounter += deltaTime; //dorp counter es como el goteo de las piezas, con que velocidad va a caer, la relacion con el tiempo es para que se vaya aumentando la velocidad a medida que el usuario avanza en el juego
     if (dropCounter > dropInterval) {
         playerDrop();
     }
@@ -238,7 +238,7 @@ const colors = [ // listado de colores para asignar a las "tetrominos" --- list 
 
 const arena = createMatrix(12, 20);
 
-const player = {
+const player = { 
     pos: {x: 0, y: 0},
     matrix: null,
     score: 0,
